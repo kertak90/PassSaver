@@ -1,3 +1,3 @@
 # PassSaver
-##How Use
-###1. dotnet PassSaver.dll <encrypt/decrypt> <file_name> <password>
+## How Use
+### 1. dotnet PassSaver.dll <encrypt/decrypt> <file_name> <password>
