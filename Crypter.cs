@@ -17,12 +17,14 @@ namespace PassSaver
                     {
                         var command = args[0];
                         var fileName = args[1];
-                        var password = args[2];
+                        var passwordWord1 = args[2];
+                        var passwordWord2 = args[3];
                         var fileLines = File.ReadAllText(fileName);
 
-                        var passwordBytes = Encoding.UTF8.GetBytes(password);
-
-                        var passwordHashBytes = SHA512.Create().ComputeHash(passwordBytes);
+                        var passwordBytes1 = Encoding.UTF8.GetBytes(passwordWord1);
+                        var passwordBytes2 = Encoding.UTF8.GetBytes(passwordWord1);
+                        passwordBytes1 = Combine(passwordBytes1, passwordBytes2);
+                        var passwordHashBytes = SHA512.Create().ComputeHash(passwordBytes1);
                         
                         if(command == "encrypt")
                         {
@@ -36,7 +38,7 @@ namespace PassSaver
                                 encryptedline = Convert.ToBase64String(bytesEncrypted);
                             }
 
-                            System.Console.WriteLine(encryptedline);
+                            // System.Console.WriteLine(encryptedline);
 
                             File.WriteAllText(fileName, encryptedline);
                         }
@@ -52,7 +54,7 @@ namespace PassSaver
                                 decryptedline = Encoding.UTF8.GetString(bytesDecrypted);
                             }
 
-                            System.Console.WriteLine(decryptedline);
+                            // System.Console.WriteLine(decryptedline);
 
                             File.WriteAllText(fileName, decryptedline);
                         }
@@ -67,7 +69,7 @@ namespace PassSaver
         }
         public byte[] Encrypt(byte[] line, byte[] password)
         {
-            System.Console.WriteLine("encrypting");
+            // System.Console.WriteLine("encrypting");
 
             byte[] encryptedBytes = null;
 
@@ -96,7 +98,7 @@ namespace PassSaver
         }
         public byte[] Decrypt(byte[] bytesToBeDecrypted, byte[] password)
         {
-            System.Console.WriteLine("decrypting");
+            // System.Console.WriteLine("decrypting");
 
             byte[] decryptedBytes = null;
 
@@ -122,6 +124,13 @@ namespace PassSaver
                 }
             }
             return decryptedBytes;
+        }
+        public static byte[] Combine(byte[] first, byte[] second)
+        {
+            byte[] ret = new byte[first.Length + second.Length];
+            Buffer.BlockCopy(first, 0, ret, 0, first.Length);
+            Buffer.BlockCopy(second, 0, ret, first.Length, second.Length);
+            return ret;
         }
     }    
 }
